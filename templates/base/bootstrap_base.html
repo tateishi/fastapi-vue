@@ -1,0 +1,15 @@
+{% extends "base/base.html" %}
+
+{% block header_base %}
+{% include "include/bootstrap_header.html" %}
+{% endblock %}
+
+{% block contents_base %}
+<nav class="navbar navbar-dark" style="background-color:#fd7e00;">
+  <a href="#" class="navbar-brand">{{ appname }}</a>
+</nav>
+{% endblock %}
+
+{% block script %}
+{% include "include/bootstrap_body.html" %}
+{% endblock %}

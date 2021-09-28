@@ -1,0 +1,27 @@
+{% extends "base/vue_base.html" %}
+
+{% block contents %}
+<div id="comp-1">
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ Vue.component('button-counter', {
+     data: function () {
+         return {
+             count: 0
+         }
+    },
+    delimiters: ['[[', ']]'],
+    template: '<button v-on:click="count++">[[ count ]] 回クリックしました</button>'
+    })
+
+ var comp1 = new Vue({
+     el: '#comp-1',
+ })
+</script>
+{% endblock %}

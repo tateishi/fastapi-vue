@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1">
+        {% block header_base %}
+        {% endblock %}
+        {% block header %}
+        {% endblock %}
+        <title>
+            {% block title %}
+            {{ title }}
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        {% block contents_base %}
+        {% endblock %}
+        {% block contents %}
+        {% endblock %}
+        {% block script_base %}
+        {% endblock %}
+        {% block script %}
+        {% endblock %}
+    </body>
+</html>

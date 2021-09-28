@@ -1,0 +1,36 @@
+{% extends "base/vue_base.html" %}
+
+{% block contents %}
+<div id="app-7">
+    <ol>
+        <todo-item
+            v-for="item in groceryList"
+            v-bind:todo="item"
+            v-bind:key="item.id">
+        </todo-item>
+    </ol>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ Vue.component('todo-item', {
+     props: ['todo'],
+     template: '<li>[[ todo.text ]]</li>',
+     delimiters: ['[[', ']]'],
+ })
+
+ var app7 = new Vue({
+     el: '#app-7',
+     delimiters: ['[[', ']]'],
+     data: {
+         groceryList: [
+             { id: 0, text: 'Vegetables' },
+             { id: 1, text: 'Cheese' },
+             { id: 2, text: 'Whatever else humans are supposed to eat' },
+         ],
+     },
+ })
+
+</script>
+{% endblock %}

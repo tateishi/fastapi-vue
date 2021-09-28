@@ -1,0 +1,19 @@
+{% extends "base/vue_base.html" %}
+
+{% block contents %}
+<div id="app-3">
+    <span v-if="seen">Now you see me</span>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ var app3 = new Vue({
+     el: '#app-3',
+     delimiters: ["[[", "]]"],
+     data: {
+         seen: true,
+     }
+ })
+</script>
+{% endblock %}
