@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -47,9 +47,16 @@ async def app_6(request: Request):
     return templates.TemplateResponse('app-6.html', data)
 
 
+@app.get('/comp-1', response_class=HTMLResponse)
+async def comp_1(request: Request):
+    data = dict(request=request, appname='comp-1', title='comp-1')
+    return templates.TemplateResponse('comp-1.html', data)
+
+
 @app.get('/data/grocery')
-async def data_grocery():
+async def data_grocery(response: Response):
     import pandas as pd
     names = 'id value'.split()
     df = pd.read_csv('data/grocery.csv', header=None, names=names)
+    response.headers['Cache-Control'] = 'no-cache, no-store'
     return df.to_dict(orient='records')
