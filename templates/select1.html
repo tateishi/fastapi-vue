@@ -1,0 +1,36 @@
+{% extends "base/vue_axios_base.html" %}
+
+{% block title %}
+select1
+{% endblock %}
+
+{% block contents %}
+<div id="app">
+    <select name="choice" v-model="selected">
+        <option v-for="item in options" v-bind:value="item.value">
+            [[ item.name ]]
+        </option>
+    </select>
+    <span>Selected: [[ selected ]]</span>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ var app = new Vue({
+     el: '#app',
+     delimiters: ['[[', ']]'],
+     data: {
+         options: [],
+         selected: 'sep',
+     },
+
+     mounted: function () {
+         axios.get('{{ url }}')
+              .then(response => {
+                  this.options = response.data
+              })
+     },
+ })
+</script>
+{% endblock %}

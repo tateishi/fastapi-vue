@@ -53,10 +53,31 @@ async def comp_1(request: Request):
     return templates.TemplateResponse('comp-1.html', data)
 
 
+@app.get('/list1', response_class=HTMLResponse)
+async def list1(request: Request):
+    data = dict(request=request)
+    return templates.TemplateResponse('list1.html', data)
+
+
+@app.get('/select1', response_class=HTMLResponse)
+async def select1(request: Request):
+    data = dict(request=request, url='http://10.0.129.78:8083/data/month')
+    return templates.TemplateResponse('select1.html', data)
+
+
 @app.get('/data/grocery')
 async def data_grocery(response: Response):
     import pandas as pd
     names = 'id value'.split()
     df = pd.read_csv('data/grocery.csv', header=None, names=names)
+    response.headers['Cache-Control'] = 'no-cache, no-store'
+    return df.to_dict(orient='records')
+
+
+@app.get('/data/month')
+async def data_month(response: Response):
+    import pandas as pd
+    names = 'id value name'.split()
+    df = pd.read_csv('data/month.csv', header=None, names=names)
     response.headers['Cache-Control'] = 'no-cache, no-store'
     return df.to_dict(orient='records')

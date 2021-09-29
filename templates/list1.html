@@ -1,0 +1,34 @@
+{% extends "base/vue_axios_base.html" %}
+
+{% block title %}
+list1
+{% endblock %}
+
+{% block contents %}
+<div id="app">
+    <ol>
+        <li v-for="item in info">
+            [[ item.value ]]
+        </li>
+    </ol>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ var app = new Vue({
+     el: '#app',
+     delimiters: ['[[', ']]'],
+     data: {
+         info: [],
+     },
+
+     mounted: function () {
+         axios.get('http://10.0.129.78:8083/data/grocery')
+              .then(response => {
+                  this.info = response.data
+                  })
+     },
+ })
+</script>
+{% endblock %}
