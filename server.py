@@ -61,7 +61,7 @@ async def list1(request: Request):
 
 @app.get('/select1', response_class=HTMLResponse)
 async def select1(request: Request):
-    data = dict(request=request, url='http://10.0.129.78:8083/data/month')
+    data = dict(request=request, url='/data/month')
     return templates.TemplateResponse('select1.html', data)
 
 
