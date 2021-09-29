@@ -1,0 +1,51 @@
+{% extends "base/bootstrap_base.html" %}
+
+{% block header %}
+{% include "include/gridjs_header.html" %}
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            abc
+
+        </div>
+        <div class="col-4">
+            <div id="table">
+            </div>
+        </div>
+
+        <div class="col-4">
+            abc
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+{% include "include/gridjs_body.html" %}
+
+<script>
+ grid = new gridjs.Grid({
+     columns: [],
+     data: [],
+ })
+
+ grid.updateConfig({
+     columns: ["Name", "Email", "Phone Number"],
+     data: [
+         ["John", "john@example.com", "(353) 01 222 3333"],
+         ["Mark", "mark@gmail.com", "(01) 22 888 4444"],
+         ["Eoin", "eoin@gmail.com", "0097 22 654 00033"],
+         ["Sarah", "sarahcdd@gmail.com", "+322 876 1233"],
+         ["Afshin", "afshin@mail.com", "(353) 22 87 8356"]
+     ]
+})
+
+ grid.render(document.getElementById("table"));
+</script>
+
+{% endblock %}

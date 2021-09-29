@@ -65,6 +65,23 @@ async def select1(request: Request):
     return templates.TemplateResponse('select1.html', data)
 
 
+@app.get('/bootstrap1', response_class=HTMLResponse)
+async def bootstrap1(request: Request):
+    data = dict(request=request,
+                title='bootstrap',
+                appname='bootstrap',
+                message='こんにちは世界')
+    return templates.TemplateResponse('bootstrap1.html', data)
+
+
+@app.get('/bootstrap2', response_class=HTMLResponse)
+async def bootstrap2(request: Request):
+    data = dict(request=request,
+                title='bootstrap',
+                appname='bootstrap')
+    return templates.TemplateResponse('bootstrap2.html', data)
+
+
 @app.get('/data/grocery')
 async def data_grocery(response: Response):
     import pandas as pd
