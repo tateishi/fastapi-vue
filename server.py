@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import acct
 
+MENUFILE = 'data/menu.csv'
 DATAFILE = 'site/data/ledger.csv'
 ACCTFILE = 'site/data/account.csv'
 
@@ -25,7 +26,6 @@ app.add_middleware(
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
 templates = Jinja2Templates(directory='templates')
-
 
 @app.get('/', response_class=HTMLResponse)
 async def index(request: Request):
@@ -79,6 +79,12 @@ async def list1(request: Request):
 async def list2(request: Request):
     data = dict(request=request)
     return templates.TemplateResponse('list2.html', data)
+
+
+@app.get('/menu', response_class=HTMLResponse)
+async def menu(request: Request):
+    data = dict(request=request)
+    return templates.TemplateResponse('menu.html', data)
 
 
 @app.get('/select1', response_class=HTMLResponse)
@@ -152,4 +158,11 @@ async def api_ledger(response: Response, id_: int):
 @app.get('/api/v1/accounts')
 async def api_accounts(response: Response):
     df = read_acct_csv()
+    return df.to_dict(orient='records')
+
+
+@app.get('/api/v1/menu')
+async def api_v1_menu(response: Response):
+    import menu
+    df = menu.read_csv(filename=MENUFILE)
     return df.to_dict(orient='records')

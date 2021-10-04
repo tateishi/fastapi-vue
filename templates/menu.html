@@ -1,0 +1,36 @@
+{% extends "base/vue_axios_base.html" %}
+
+{% block title %}
+menu
+{% endblock %}
+
+{% block contents %}
+<div id="app">
+    <div id="menu">
+        <ul>
+            <li v-for="item in menu_item">
+                <a :href="item.url">[[ item.title ]]</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ var app = new Vue({
+     el: '#app',
+     delimiters: ['[[', ']]'],
+     data: {
+         menu_item: null,
+     },
+
+     mounted: function () {
+         axios.get('/api/v1/menu')
+              .then(response => {
+                  this.menu_item = response.data
+              })
+     },
+ })
+</script>
+{% endblock %}
