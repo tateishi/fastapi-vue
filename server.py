@@ -75,6 +75,12 @@ async def list1(request: Request):
     return templates.TemplateResponse('list1.html', data)
 
 
+@app.get('/list2', response_class=HTMLResponse)
+async def list2(request: Request):
+    data = dict(request=request)
+    return templates.TemplateResponse('list2.html', data)
+
+
 @app.get('/select1', response_class=HTMLResponse)
 async def select1(request: Request):
     data = dict(request=request, url='/data/month')
@@ -128,6 +134,16 @@ def read_acct_csv(datafile=ACCTFILE):
 async def api_ledger(response: Response):
     df = read_csv()
     account = '資産:現金:家計財布'
+    data = df.loc[df['account']==account]
+    data['cum'] = data['amount'].cumsum()
+    return data.to_dict(orient='records')
+
+
+@app.get('/api/v1/ledger/{id_}')
+async def api_ledger(response: Response, id_: int):
+    df = read_csv()
+    acct_df = read_acct_csv()
+    account = acct.account_by_number(acct_df, id_)
     data = df.loc[df['account']==account]
     data['cum'] = data['amount'].cumsum()
     return data.to_dict(orient='records')
