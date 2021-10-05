@@ -87,6 +87,12 @@ async def list3(request: Request):
     return templates.TemplateResponse('list3.html', data)
 
 
+@app.get('/list4', response_class=HTMLResponse)
+async def list4(request: Request):
+    data = dict(request=request)
+    return templates.TemplateResponse('list4.html', data)
+
+
 @app.get('/menu', response_class=HTMLResponse)
 async def menu(request: Request):
     data = dict(request=request)

@@ -1,0 +1,93 @@
+{% extends "base/vue_grid_base.html" %}
+
+{% block title %}
+list4
+{% endblock %}
+
+{% block contents %}
+<div id="app">
+    <ledger-reg></ledger-reg>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+ Vue.component('ledger-reg', {
+     delimiters: ['[[', ']]'],
+
+     data: function () {
+         return {
+             api_account: '/api/v1/accounts',
+             api_ledger: '/api/v1/ledger/',
+             gridjsConfig: {
+                 columns: ['日付', '相手先', '科目', '金額', '残高', '通貨', 'フラグ', 'メモ'],
+                 fixedHeader: true,
+                 height: '720px',
+                 server: {
+                     url: this.api_ledger,
+                     then: data => data.map(item => [
+                         item.date,
+                         item.payee,
+                         item.account,
+                         item.amount,
+                         item.cum,
+                         item.currency,
+                         item.flag,
+                         item.memo]),
+                     handle: (res) => {
+                         if (res.status == 404) return { data: []};
+                         if (res.ok) return res.json();
+
+                         throw Error('oh no ;(');
+                     },
+                 },
+                 pagination: {
+                     enabled: true,
+                     limit: 100,
+                 },
+             },
+             accounts: [],
+             selected: 1,
+             grid: null,
+         };
+     },
+
+     template : `
+         <div id="ledger">
+             <div id="account">
+                 <select v-model="selected" @change="change">
+                     <option v-for="account in accounts" v-bind:value="account.number">
+                         [[ account.name ]]
+                     </option>
+                 </select>
+             </div>
+
+             <div id="table"></div>
+         </div>`,
+
+     methods: {
+         change: function () {
+             this.gridjsConfig.server.url = this.api_ledger + this.selected;
+             this.grid.updateConfig(this.gridjsConfig);
+             this.grid.forceRender();
+         },
+     },
+
+     mounted: function () {
+         axios.get(this.api_account)
+              .then(response => {
+                  this.accounts = response.data
+              })
+         this.gridjsConfig.server.url = this.api_ledger + this.selected;
+         this.grid = new gridjs.Grid(this.gridjsConfig)
+         this.grid.render(document.getElementById("table"));
+     },
+
+ });
+
+ var app = new Vue({
+     el: '#app',
+ })
+</script>
+{% endblock %}
