@@ -1,0 +1,82 @@
+{% extends "base/vue_grid_base.html" %}
+
+{% block title %}
+list3
+{% endblock %}
+
+{% block contents %}
+<div id="app">
+    <div id="account">
+        <select v-model="selected" @change="change">
+            <option v-for="account in accounts" v-bind:value="account.number">
+                [[ account.name ]]
+            </option>
+        </select>
+    </div>
+
+    <div id="table"></div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+ let api_account = '/api/v1/accounts';
+ let api_ledger = '/api/v1/ledger/';
+
+ let gridjsConfig = {
+     columns: ['日付', '相手先', '科目', '金額', '残高', '通貨', 'フラグ', 'メモ'],
+     fixedHeader: true,
+     height: '720px',
+     server: {
+         url: api_ledger,
+         then: data => data.map(item => [
+             item.date,
+             item.payee,
+             item.account,
+             item.amount,
+             item.cum,
+             item.currency,
+             item.flag,
+             item.memo]),
+         handle: (res) => {
+             if (res.status == 404) return { data: []};
+             if (res.ok) return res.json();
+
+             throw Error('oh no ;(');
+         },
+     },
+     pagination: {
+         enabled: true,
+         limit: 100,
+     },
+ };
+
+ var app = new Vue({
+     el: '#app',
+     delimiters: ['[[', ']]'],
+     data: {
+         accounts: [],
+         selected: 1,
+         grid: null,
+     },
+
+     methods: {
+         change: function () {
+             gridjsConfig.server.url = api_ledger + this.selected;
+             this.grid.updateConfig(gridjsConfig);
+             this.grid.forceRender();
+         },
+     },
+
+     mounted: function () {
+         axios.get(api_account)
+              .then(response => {
+                  this.accounts = response.data
+              })
+         gridjsConfig.server.url = api_ledger + this.selected;
+         this.grid = new gridjs.Grid(gridjsConfig)
+         this.grid.render(document.getElementById("table"));
+     },
+ })
+</script>
+{% endblock %}
