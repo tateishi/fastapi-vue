@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+
+{% block header_base %}
+{% include "include/vue_header.html" %}
+{% include "include/axios_header.html" %}
+{% include "include/gridjs_header.html" %}
+{% endblock %}
+
+{% block contents_base %}
+<nav id="app-menu">
+    <div id="menu">
+        <ul>
+            <li v-for="item in menu_item">
+                <a :href="item.url">[[ item.title ]]</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block script_base %}
+{% include "include/vue_body.html" %}
+{% include "include/gridjs_body.html" %}
+<script>
+ var app_menu = new Vue({
+     el: '#app-menu',
+     delimiters: ['[[', ']]'],
+     data: {
+         menu_item: null,
+     },
+
+     mounted: function () {
+         axios.get('/api/v1/menu')
+              .then(response => {
+                  this.menu_item = response.data
+              })
+     },
+ })
+</script>
+{% endblock %}
