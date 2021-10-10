@@ -1,4 +1,4 @@
-{% extends "base/vue_grid_base.html" %}
+{% extends "base/vue_menu_base.html" %}
 
 {% block title %}
 list2
@@ -63,7 +63,7 @@ list2
          this.grid = new gridjs.Grid({
              columns: ['日付', '相手先', '科目', '金額', '残高', '通貨', 'フラグ', 'メモ'],
              fixedHeader: true,
-             height: '720px',
+             height: '640px',
              server: {
                  url: '/api/v1/ledger/1',
                  then: data => data.map(item => [
