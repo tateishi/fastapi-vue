@@ -1,7 +1,7 @@
 {% extends "base/vue_menu_base.html" %}
 
 {% block title %}
-list3
+相手先別
 {% endblock %}
 
 {% block contents %}
@@ -20,8 +20,8 @@ list3
 
 {% block script %}
 <script>
- let api_account = '/api/v1/accounts';
- let api_ledger = '/api/v1/ledger/';
+ let api_account = '/api/v1/payees';
+ let api_ledger = '/api/v1/bypayee/';
 
  let gridjsConfig = {
      columns: ['日付', '相手先', '科目', '金額', '残高', '通貨', 'フラグ', 'メモ'],

@@ -57,13 +57,26 @@ def grid_payee(df, account):
     columns = {t: f'y{t:04}' for t in df_grid.columns if isinstance(t, int)}
     return df_grid.rename(columns=columns)
 
+
 def read_accounts_csv(filename):
     names ='number name'.split()
     df = pd.read_csv(filename, names=names, na_filter=False)
     return df
 
+
 def account_by_number(df, number):
     return df.loc[df['number'] == number]['name'].values[0]
 
+
 def account_by_name(df, name):
     return df.loc[df['name'] == name]['number'].values[0]
+
+
+def read_payees_csv(filename):
+    names ='number name'.split()
+    df = pd.read_csv(filename, names=names, na_filter=False)
+    return df
+
+
+def payee_by_number(df, number):
+    return df.loc[df['number'] == number]['name'].values[0]

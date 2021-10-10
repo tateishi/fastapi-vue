@@ -9,6 +9,8 @@ import acct
 MENUFILE = 'data/menu.csv'
 DATAFILE = 'site/data/ledger.csv'
 ACCTFILE = 'site/data/account.csv'
+PAYEEFILE = 'site/data/payee.csv'
+
 
 origins = [
     '*',
@@ -148,6 +150,10 @@ def read_acct_csv(datafile=ACCTFILE):
     return acct.read_accounts_csv(datafile)
 
 
+def read_payee_csv(datafile=PAYEEFILE):
+    return acct.read_payees_csv(datafile)
+
+
 @app.get('/api/v1/ledger')
 async def api_ledger(response: Response):
     df = read_csv()
@@ -170,6 +176,22 @@ async def api_ledger(response: Response, id_: int):
 @app.get('/api/v1/accounts')
 async def api_accounts(response: Response):
     df = read_acct_csv()
+    return df.to_dict(orient='records')
+
+
+@app.get('/api/v1/bypayee/{id_}')
+async def api_bypayee(response: Response, id_: int):
+    df = read_csv()
+    payee_df = read_payee_csv()
+    payee = acct.payee_by_number(payee_df, id_)
+    data = df.loc[df['payee']==payee]
+    data['cum'] = data['amount'].cumsum()
+    return data.to_dict(orient='records')
+
+
+@app.get('/api/v1/payees')
+async def api_payees(response: Response):
+    df = read_payee_csv()
     return df.to_dict(orient='records')
 
 
