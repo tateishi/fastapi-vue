@@ -19,22 +19,28 @@ list4
      data: function () {
          return {
              api_account: '/api/v1/accounts',
-             api_ledger: '/api/v1/ledger/',
+             api_ledger: '/api/v1/monthly/account',
              gridjsConfig: {
-                 columns: ['日付', '相手先', '科目', '金額', '残高', '通貨', 'フラグ', 'メモ'],
+                 columns: ['相手先', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                  fixedHeader: true,
                  height: '720px',
                  server: {
                      url: this.api_ledger,
                      then: data => data.map(item => [
-                         item.date,
                          item.payee,
-                         item.account,
-                         item.amount,
-                         item.cum,
-                         item.currency,
-                         item.flag,
-                         item.memo]),
+                         item.m01,
+                         item.m02,
+                         item.m03,
+                         item.m04,
+                         item.m05,
+                         item.m06,
+                         item.m07,
+                         item.m08,
+                         item.m09,
+                         item.m10,
+                         item.m11,
+                         item.m12,
+                     ]),
                      handle: (res) => {
                          if (res.status == 404) return { data: []};
                          if (res.ok) return res.json();
@@ -68,7 +74,7 @@ list4
 
      methods: {
          change: function () {
-             this.gridjsConfig.server.url = this.api_ledger + this.selected;
+             this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/2021`;
              this.grid.updateConfig(this.gridjsConfig);
              this.grid.forceRender();
          },
@@ -79,7 +85,7 @@ list4
               .then(response => {
                   this.accounts = response.data
               })
-         this.gridjsConfig.server.url = this.api_ledger + this.selected;
+         this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/2021`;
          this.grid = new gridjs.Grid(this.gridjsConfig)
          this.grid.render(document.getElementById("table"));
      },

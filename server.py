@@ -200,3 +200,12 @@ async def api_v1_menu(response: Response):
     import menu
     df = menu.read_csv(filename=MENUFILE)
     return df.to_dict(orient='records')
+
+
+@app.get('/api/v1/monthly/account/{account}/{year}')
+def api_monthly_account(response: Response, account: int, year: int):
+    df = read_csv()
+    account_df = read_acct_csv()
+    account_name = acct.account_by_number(account_df, account)
+    data = acct.grid_account_monthly(df, account_name, year)
+    return data.to_dict(orient='records')

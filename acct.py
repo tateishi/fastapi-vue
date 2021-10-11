@@ -58,6 +58,32 @@ def grid_payee(df, account):
     return df_grid.rename(columns=columns)
 
 
+def grid_period_bypayee(df, payee):
+    df_jp = df_jpy(df)
+    df_payee = df_jp.loc[df_jp['payee'] == payee]
+    grid = pd.pivot_table(df_payee,
+                          values='amount',
+                          index='account',
+                          columns=df_payee['date_t'].dt.year,
+                          aggfunc=np.sum,
+                          fill_value=0).reset_index()
+    columns = {t: f'y{t:04}' for t in grid.columns if isinstance(t, int)}
+    return grid.rename(columns=columns)
+
+
+def grid_account_monthly(df, account, year):
+    df_jp = df_jpy(df)
+    df_payee = df_jp.loc[(df_jp['account'] == account) & (df_jp['date_t'].dt.year == year)]
+    grid = pd.pivot_table(df_payee,
+                          values='amount',
+                          index='payee',
+                          columns=df_payee['date_t'].dt.month,
+                          aggfunc=np.sum,
+                          fill_value=0).reset_index()
+    columns = {t: f'm{t:02}' for t in grid.columns if isinstance(t, int)}
+    return grid.rename(columns=columns)
+
+
 def read_accounts_csv(filename):
     names ='number name'.split()
     df = pd.read_csv(filename, names=names, na_filter=False)

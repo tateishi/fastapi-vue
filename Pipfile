@@ -10,6 +10,7 @@ jinja2 = "*"
 aiofiles = "*"
 numpy = "*"
 pandas = "*"
+ipython = "*"
 
 [dev-packages]
 
