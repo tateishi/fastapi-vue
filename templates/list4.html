@@ -56,6 +56,7 @@ list4
              accounts: [],
              selected: 1,
              grid: null,
+             year: 2021,
          };
      },
 
@@ -67,6 +68,7 @@ list4
                          [[ account.name ]]
                      </option>
                  </select>
+                 <input v-model="year" @change="change"></input>
              </div>
 
              <div id="table"></div>
@@ -74,7 +76,7 @@ list4
 
      methods: {
          change: function () {
-             this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/2021`;
+             this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/${this.year}`;
              this.grid.updateConfig(this.gridjsConfig);
              this.grid.forceRender();
          },
@@ -85,7 +87,7 @@ list4
               .then(response => {
                   this.accounts = response.data
               })
-         this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/2021`;
+         this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/${this.year}`;
          this.grid = new gridjs.Grid(this.gridjsConfig)
          this.grid.render(document.getElementById("table"));
      },
