@@ -1,0 +1,101 @@
+{% extends "base/vue_menu_base.html" %}
+
+{% block title %}
+相手先科目別月間集計
+{% endblock %}
+
+{% block contents %}
+<div id="app">
+    <ledger-reg></ledger-reg>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+ Vue.component('ledger-reg', {
+     delimiters: ['[[', ']]'],
+
+     data: function () {
+         return {
+             api_payee: '/api/v1/payees',
+             api_ledger: '/api/v1/monthly/payee',
+             gridjsConfig: {
+                 columns: ['科目', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                 fixedHeader: true,
+                 height: '720px',
+                 server: {
+                     url: this.api_ledger,
+                     then: data => data.map(item => [
+                         item.account,
+                         item.m01,
+                         item.m02,
+                         item.m03,
+                         item.m04,
+                         item.m05,
+                         item.m06,
+                         item.m07,
+                         item.m08,
+                         item.m09,
+                         item.m10,
+                         item.m11,
+                         item.m12,
+                     ]),
+                     handle: (res) => {
+                         if (res.status == 404) return { data: []};
+                         if (res.ok) return res.json();
+
+                         throw Error('oh no ;(');
+                     },
+                 },
+                 pagination: {
+                     enabled: true,
+                     limit: 100,
+                 },
+             },
+             payees: [],
+             selected: 1,
+             grid: null,
+             year: 2021,
+         };
+     },
+
+     template : `
+         <div id="ledger">
+             <div id="payee">
+                 <select v-model="selected" @change="change">
+                     <option v-for="payee in payees" v-bind:value="payee.number">
+                         [[ payee.name ]]
+                     </option>
+                 </select>
+                 <input v-model="year" @change="change"></input>
+             </div>
+
+             <div id="table"></div>
+         </div>`,
+
+     methods: {
+         change: function () {
+             this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/${this.year}`;
+             this.grid.updateConfig(this.gridjsConfig);
+             this.grid.forceRender();
+         },
+     },
+
+     mounted: function () {
+         axios.get(this.api_payee)
+              .then(response => {
+                  this.payees = response.data
+              })
+         this.gridjsConfig.server.url = `${this.api_ledger}/${this.selected}/${this.year}`;
+         this.grid = new gridjs.Grid(this.gridjsConfig)
+         this.grid.render(document.getElementById("table"));
+     },
+
+ });
+
+ var app = new Vue({
+     el: '#app',
+ })
+</script>
+{% endblock %}

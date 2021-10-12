@@ -58,16 +58,16 @@ def grid_payee(df, account):
     return df_grid.rename(columns=columns)
 
 
-def grid_period_bypayee(df, payee):
+def grid_payee_monthly(df, payee, year):
     df_jp = df_jpy(df)
-    df_payee = df_jp.loc[df_jp['payee'] == payee]
+    df_payee = df_jp.loc[(df_jp['payee'] == payee) & (df_jp['date_t'].dt.year == year)]
     grid = pd.pivot_table(df_payee,
                           values='amount',
                           index='account',
-                          columns=df_payee['date_t'].dt.year,
+                          columns=df_payee['date_t'].dt.month,
                           aggfunc=np.sum,
                           fill_value=0).reset_index()
-    columns = {t: f'y{t:04}' for t in grid.columns if isinstance(t, int)}
+    columns = {t: f'm{t:02}' for t in grid.columns if isinstance(t, int)}
     return grid.rename(columns=columns)
 
 
